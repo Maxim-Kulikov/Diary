@@ -3,10 +3,13 @@ package server.utils;
 public class Validator {
 
     public static boolean isLoginValid(String email) {
-        return email != null;
+        return email != null && !email.isEmpty();
     }
 
     public static boolean isPasswordValid(String password) {
-        return password != null;
+        return password != null && password.length() <=20;
     }
+
+
+
 }

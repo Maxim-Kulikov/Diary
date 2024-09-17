@@ -19,6 +19,7 @@ public class UserController {
         if (!Validator.isLoginValid(createUserRqDto.login()) || !Validator.isPasswordValid(createUserRqDto.password())) {
             return new ResponseDto<>(new ErrorDto("Некорректный логин или пароль!"));
         }
+
         return mainFacade.createUser(createUserRqDto);
     }
 }
