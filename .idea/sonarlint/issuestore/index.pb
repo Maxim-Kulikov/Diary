@@ -38,3 +38,5 @@ f
 6src/server/presentation/controller/UserController.java,1\2\1202913911a081d44407dd7262f4ace353b6bc40
 k
 ;src/server/presentation/controller/ExceptionController.java,8\5\8517b961797e5b020e2ac341097b7e61942da69f
+O
+src/server/utils/Validator.java,1\6\163a21d24c3845ba390ef73d4455c2df5321c2aa

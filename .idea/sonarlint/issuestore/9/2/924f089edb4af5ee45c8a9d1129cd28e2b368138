@@ -1,4 +1,4 @@
 
 0
 java:S1220""Move this file to a named package.
-L	java:S106"+Replace this use of System.out by a logger.(Í®’¤øÿÿÿÿ8¯’Ì°Ÿ2
+G	java:S106"+Replace this use of System.out by a logger.(‡÷ñâ8¯’Ì°Ÿ2
