@@ -5,7 +5,6 @@ import server.presentation.dto.request.CreateUserRqDto;
 import server.presentation.dto.response.CreateUserRespDto;
 import server.presentation.dto.response.ErrorDto;
 import server.presentation.dto.response.ResponseDto;
-import server.utils.Validator;
 
 public class UserController {
 
@@ -16,7 +15,7 @@ public class UserController {
     }
 
     public ResponseDto<CreateUserRespDto> createAccount(CreateUserRqDto createUserRqDto) {
-        if (!Validator.isLoginValid(createUserRqDto.login()) || !Validator.isPasswordValid(createUserRqDto.password())) {
+        if (createUserRqDto.login() == null || createUserRqDto.password() == null) {
             return new ResponseDto<>(new ErrorDto("Некорректный логин или пароль!"));
         }
 
