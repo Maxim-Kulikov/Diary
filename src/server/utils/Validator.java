@@ -31,7 +31,7 @@ public class Validator {
 
     public static boolean IsContainingElement(int min, int max, String input, String symbol) throws ConstraintViolationException {
         System.out.println("Введите символ для его получения: ");
-        String var = new Scanner(System.in).nextLine();
+        symbol = new Scanner(System.in).nextLine();
         for (int i = min; i < max; i++) {
             char iPosition = input.charAt(i);
             if (symbol.equals(String.valueOf(iPosition))) {

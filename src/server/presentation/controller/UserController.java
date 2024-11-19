@@ -14,8 +14,8 @@ public class UserController {
     private final Validator validator;
 
     public UserController() {
-        mainFacade = new MainFacade();
         validator = new Validator();
+        mainFacade = new MainFacade();
     }
 
     public ResponseDto<CreateUserRespDto> createAccount(CreateUserRqDto createUserRqDto) throws ConstraintViolationException {
@@ -36,7 +36,7 @@ public class UserController {
         if (Validator.ifInputIsGreaterThanMax(createUserRqDto.login().length(), max) || Validator.ifInputIsGreaterThanMax(createUserRqDto.password().length(), max)){
             return null;
         }
-        if (Validator.IsContainingElement(min, max, input, symbol)) {
+        if (Validator.IsContainingElement(min, max, input, symbol )) {
             return null;
         }
 
