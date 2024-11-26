@@ -42,3 +42,9 @@ O
 src/server/utils/Validator.java,1\6\163a21d24c3845ba390ef73d4455c2df5321c2aa
 w
 Gsrc/server/utils/exception/badrequest/ConstraintViolationException.java,9\f\9f50c676ecf6694a0dbdf5a5113b012171650d0c
+J
+src/db/DatabaseDriver.java,6\b\6bd968f01a049d52de159fb7218a7e527e08a9e9
+9
+	users.txt,f\9\f93ae4f67f83f844c35484f27fe1ba4244266c9a
+F
+src/db/files/users.txt,f\a\fa504c10d01233a293154b486f48977df5ea5167

@@ -6,6 +6,19 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class User {
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", role=" + role +
+                ", isBlocked=" + isBlocked +
+                '}';
+    }
 
     private UUID id;
     private String login;
