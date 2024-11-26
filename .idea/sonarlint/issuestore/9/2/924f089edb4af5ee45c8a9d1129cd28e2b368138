@@ -1,4 +1,6 @@
 
 7
-java:S1220""Move this file to a named package.8Ýúú“¯2
-G	java:S106"+Replace this use of System.out by a logger.(‡÷ñâ8ŽÖ¾Ç¶2
+java:S1220""Move this file to a named package.8‘Ã‰É¶2
+º
+java:S1130
+"—Remove the declaration of thrown exception 'server.utils.exception.badrequest.ConstraintViolationException', as it cannot be thrown from method's body.(ÀÏ‰…þÿÿÿÿ8›Ã‰É¶2
