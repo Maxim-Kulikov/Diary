@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) throws ConstraintViolationException, IOException {
-        DatabaseDriver.INSTANCE.writeUsersToFile(List.of(new User(UUID.randomUUID(), "", "", "", "",""),
-                new User(UUID.randomUUID(), "", "", "", "","")));
+        DatabaseDriver.INSTANCE.writeUsersToFile(List.of(new User(UUID.randomUUID(), "Zlll", "", "", "","")));
+        DatabaseDriver.INSTANCE.readUserFromFile();
     }
 }
