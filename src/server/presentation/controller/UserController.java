@@ -7,6 +7,8 @@ import server.presentation.dto.response.ResponseDto;
 import server.utils.Validator;
 import server.utils.exception.badrequest.ConstraintViolationException;
 
+import java.util.UUID;
+
 public class UserController {
 
     private final MainFacade mainFacade;
@@ -21,5 +23,7 @@ public class UserController {
 
         return mainFacade.createUser(createUserRqDto);
     }
+
+
 }
 

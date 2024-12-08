@@ -6,6 +6,19 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class User {
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", role=" + role +
+                ", isBlocked=" + isBlocked +
+                '}';
+    }
 
     private UUID id;
     private String login;
@@ -19,13 +32,15 @@ public class User {
     public User() {
     }
 
-    public User(UUID id, String login, String password, String username, String name, String lastname) {
+    public User(UUID id, String login, String password, String username, String name, String lastname, RoleEnum role, boolean isBlocked) {
         this.id = id;
         this.login = login;
         this.password = password;
         this.username = username;
         this.name = name;
         this.lastname = lastname;
+        this.role = role;
+        this.isBlocked = isBlocked;
     }
 
     public UUID getId() {

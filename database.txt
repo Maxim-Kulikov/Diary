@@ -1,0 +1,4 @@
+[User{id=a7f6b59e-a8a7-48b0-850a-04a180fcc475, login='nigger', password='123', username='jkaka', name='Kirill', lastname='Savenko', role=ADMIN, isBlocked=true}]
+[User{id=e88b23c6-183e-4472-b2b9-a1828a7462b5, login='nigger', password='123', username='jkaka', name='Kirill', lastname='Savenko', role=ADMIN, isBlocked=true}]
+[User{id=ed1c4dee-38ea-4124-9d50-5d36ce6be544, login='nigger', password='123', username='jkaka', name='Kirill', lastname='Savenko', role=ADMIN, isBlocked=true}]
+[User{id=49729612-38b4-4bbb-ad5c-4aca4f621014, login='nigger', password='123', username='jkaka', name='Kirill', lastname='Savenko', role=ADMIN, isBlocked=true}]
