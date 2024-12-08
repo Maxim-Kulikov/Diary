@@ -1,6 +1,7 @@
 package server.data.repository;
 
 import db.Database;
+import db.DatabaseDriver;
 import server.data.entity.User;
 
 import java.util.Optional;
