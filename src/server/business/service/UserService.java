@@ -3,7 +3,9 @@ package server.business.service;
 import server.data.entity.User;
 import server.data.repository.UserRepository;
 
+import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 public class UserService {
     private final UserRepository userRepository;
@@ -12,13 +14,22 @@ public class UserService {
         this.userRepository = new UserRepository();
     }
 
-    public Optional<User> findUserByLogin(String login) {
+    public Optional<User> findUserByLogin(String login) throws IOException {
         return userRepository.findUserByLogin(login);
     }
 
-    public User save(User user) {
-        return userRepository.save(user);
+    public void save(User user) throws IOException {
+        userRepository.save(user);
     }
+
+    public Optional<User> findUserByID(UUID id) throws IOException {
+        return userRepository.findUserById(id);
+    }
+
+    public void delete(UUID id) throws IOException {
+        userRepository.delete(id);
+    }
+
 
 
 }
