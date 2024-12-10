@@ -1,6 +1,7 @@
 package server.presentation.controller;
 
 import server.business.facade.MainFacade;
+import server.data.repository.UserRepository;
 import server.presentation.dto.request.CreateUserRqDto;
 import server.presentation.dto.response.CreateUserRespDto;
 import server.presentation.dto.response.ResponseDto;
@@ -13,8 +14,9 @@ import java.util.UUID;
 public class UserController {
 
     private final MainFacade mainFacade;
+    private UserRepository userRepository;
 
-    public UserController() {
+    public UserController() throws IOException {
         mainFacade = new MainFacade();
     }
 

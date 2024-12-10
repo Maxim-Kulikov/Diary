@@ -1,6 +1,6 @@
 package server.presentation.dto.response;
 
-public class ResponseDto<T> {
+public class  ResponseDto<T> {
     private T result;
     private ErrorDto errorDto;
 

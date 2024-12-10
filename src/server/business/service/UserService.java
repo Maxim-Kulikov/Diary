@@ -10,7 +10,7 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
 
-    public UserService() {
+    public UserService() throws IOException {
         this.userRepository = new UserRepository();
     }
 
@@ -18,8 +18,10 @@ public class UserService {
         return userRepository.findUserByLogin(login);
     }
 
-    public void save(User user) throws IOException {
+    public User save(User user) throws IOException {
+        user.setId(UUID.randomUUID());
         userRepository.save(user);
+        return user;
     }
 
     public Optional<User> findUserByID(UUID id) throws IOException {
