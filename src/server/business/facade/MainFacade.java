@@ -26,7 +26,6 @@ public class MainFacade {
         userService = new UserService();
     }
 
-
     public ResponseDto<CreateUserRespDto> createUser(CreateUserRqDto createUserRqDto) throws IOException {
         String login = createUserRqDto.login();
         if (userService.findUserByLogin(login).isPresent()) {
@@ -46,9 +45,8 @@ public class MainFacade {
 
         if(userService.findUserByID(id).isEmpty()){
             throw new UserNotFoundException("User not found");
-        } else {
-            userService.delete(id);
         }
+            userService.delete(id);
     }
 
 

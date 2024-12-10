@@ -18,12 +18,10 @@ public class UserRepository {
         this.userList = DatabaseDriver.INSTANCE.readUserFromFile();
     }
 
-
     @Override
     protected void finalize() throws IOException {
         database.writeUsersToFile(userList);
     }
-
 
     public User save(User user) {
         userList.add(user);

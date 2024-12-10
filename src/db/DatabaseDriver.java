@@ -9,7 +9,6 @@ import java.util.*;
 public enum DatabaseDriver {
     INSTANCE;
 
-
     public void writeUsersToFile(List<User> userList) throws IOException {
         File database = new File("database.txt");
             if (!database.exists()) {
@@ -21,7 +20,6 @@ public enum DatabaseDriver {
                 bufferedWriter.write(userList.toString() + "\n");
                 bufferedWriter.close();
     }
-
 
     public List<User> readUserFromFile() throws IOException {
 
