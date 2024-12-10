@@ -23,7 +23,6 @@ public enum DatabaseDriver {
     }
 
 
-
     public List<User> readUserFromFile() throws IOException {
 
         List<User> userList = new ArrayList<>();

@@ -7,6 +7,7 @@ import server.presentation.dto.request.CreateUserRqDto;
 import server.presentation.dto.response.CreateUserRespDto;
 import server.presentation.dto.response.ErrorDto;
 import server.presentation.dto.response.ResponseDto;
+import server.utils.exception.badrequest.UserNotFoundException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,15 +21,11 @@ public class MainFacade {
 
     private final UserMapper userMapper;
 
-    private User user;
-
-    public MainFacade() {
+    public MainFacade() throws IOException {
         userMapper = new UserMapper();
         userService = new UserService();
-        user = new User();
     }
 
-    List<User> users = new ArrayList<>();
 
     public ResponseDto<CreateUserRespDto> createUser(CreateUserRqDto createUserRqDto) throws IOException {
         String login = createUserRqDto.login();
@@ -36,7 +33,7 @@ public class MainFacade {
             return new ResponseDto<>(new ErrorDto("Пользователь с логином %s уже существует".formatted(login)));
         }
         User user = userMapper.toUser(createUserRqDto);
-        userService.save(user);
+        user = userService.save(user);
         CreateUserRespDto createUserRespDto = userMapper.toCreateUserRespDto(user);
         return userMapper.toResponseDto(createUserRespDto, null);
     }
@@ -46,7 +43,12 @@ public class MainFacade {
     }
 
     public void deleteUser(UUID id) throws IOException {
-        userService.delete(id);
+
+        if(userService.findUserByID(id).isEmpty()){
+            throw new UserNotFoundException("User not found");
+        } else {
+            userService.delete(id);
+        }
     }
 
 

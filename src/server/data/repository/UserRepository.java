@@ -4,7 +4,6 @@ import db.DatabaseDriver;
 import server.data.entity.User;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,41 +12,39 @@ public class UserRepository {
 
     private final DatabaseDriver database = DatabaseDriver.INSTANCE;
 
-    private List<User> usersRepository;
+    private final List<User> userList;
 
-    public UserRepository() {
-        this.usersRepository = new ArrayList<>();
+    public UserRepository() throws IOException {
+        this.userList = DatabaseDriver.INSTANCE.readUserFromFile();
     }
 
-    public void transferUsersFromDatabase() throws IOException {
-       usersRepository = DatabaseDriver.INSTANCE.readUserFromFile();
-    }
 
     @Override
     protected void finalize() throws IOException {
-        database.writeUsersToFile(usersRepository);
+        database.writeUsersToFile(userList);
     }
 
 
-    public void save(User user) throws IOException {
-        usersRepository.add(user);
+    public User save(User user) {
+        userList.add(user);
+        return user;
     }
 
-    public Optional<User> findUserByLogin(String login) throws IOException {
-        return usersRepository
+    public Optional<User> findUserByLogin(String login) {
+        return userList
                 .stream()
                 .filter(user -> user.getLogin().equals(login))
                 .findFirst();
     }
 
-    public Optional<User> findUserById(UUID id) throws IOException {
-        return usersRepository
+    public Optional<User> findUserById(UUID id) {
+        return userList
                 .stream()
                 .filter(user -> user.getId().equals(id))
                 .findFirst();
     }
 
-    public void delete(UUID id) throws IOException {
-        usersRepository.remove(findUserById(id));
+    public void delete(UUID id) {
+        userList.remove(findUserById(id));
     }
 }
