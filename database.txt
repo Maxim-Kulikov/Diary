@@ -2,3 +2,4 @@
 [User{id=bf8ee99a-ecee-4e22-b9a1-e590b5cfb22c, login='nigger', password='123', username='jkaka', name='Kirill', lastname='Savenko', role=ADMIN, isBlocked=true}]
 [User{id=b754a1ec-e830-4ab2-8335-00126585659d, login='nigger', password='123', username='jkaka', name='Kirill', lastname='Savenko', role=ADMIN, isBlocked=true}]
 [User{id=15f68613-aa79-4c9c-a572-46cf87d2b254, login='nigger', password='123', username='kaimentalityy', name='Kirill', lastname='Savenko', role=ADMIN, isBlocked=true}]
+[User{id=7384a186-7474-4be1-8625-f7ce79e4f40b, login='nigger', password='123', username='kaimentalityy', name='Kirill', lastname='Savenko', role=ADMIN, isBlocked=true}]
