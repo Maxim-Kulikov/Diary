@@ -7,6 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="postgresql-42.7.4" level="project" />
   </component>
   <component name="SonarLintModuleSettings">
     <option name="uniqueId" value="4439651f-c1fa-4477-be6c-9cdc8b24a278" />

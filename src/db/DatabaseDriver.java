@@ -2,7 +2,7 @@ package db;
 
 import server.business.enums.RoleEnum;
 import server.data.entity.User;
-import server.utils.exception.badrequest.UserAlreadyExistsException;
+
 import java.io.*;
 import java.util.*;
 
@@ -16,9 +16,9 @@ public enum DatabaseDriver {
             }
             FileWriter fileWriter = new FileWriter(database, true);
 
-                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-                bufferedWriter.write(userList.toString() + "\n");
-                bufferedWriter.close();
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(userList.toString() + "\n");
+            bufferedWriter.close();
     }
 
     public List<User> readUserFromFile() throws IOException {
@@ -65,8 +65,3 @@ public enum DatabaseDriver {
         return super.toString();
     }
 }
-
-
-
-
-

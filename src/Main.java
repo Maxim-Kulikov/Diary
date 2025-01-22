@@ -1,22 +1,14 @@
-import db.DatabaseDriver;
+import db.ConnectionPool;
 
-import server.business.enums.RoleEnum;
-import server.data.entity.User;
-import server.data.repository.UserRepository;
-import server.utils.exception.badrequest.ConstraintViolationException;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class Main {
-    public static void main(String[] args) throws ConstraintViolationException, IOException {
+    public static void main(String[] args) throws SQLException {
 
-
-        UserRepository userRepository = new UserRepository();
-
-        DatabaseDriver.INSTANCE.writeUsersToFile(List.of(new User(UUID.randomUUID(), "nigger", "123", "kaimentalityy", "Kirill","Savenko", RoleEnum.ADMIN, true)));
-
+        ConnectionPool conn = ConnectionPool.getInstance();
+        System.out.println(conn.connectToDataBase());
 
     }
 }
+

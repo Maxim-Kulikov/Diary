@@ -1,6 +1,7 @@
 package server.data.repository;
 
 import db.DatabaseDriver;
+import server.business.enums.RoleEnum;
 import server.data.entity.User;
 
 import java.io.IOException;
