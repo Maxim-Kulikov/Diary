@@ -4,13 +4,14 @@ import server.data.entity.User;
 import server.data.repository.UserRepository;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
 public class UserService {
     private final UserRepository userRepository;
 
-    public UserService() throws IOException {
+    public UserService() throws IOException, SQLException {
         this.userRepository = new UserRepository();
     }
 

@@ -23,7 +23,6 @@ public class UserMapper {
         User user = new User();
         user.setLogin(createUserRqDto.login());
         user.setPassword(createUserRqDto.password());
-        user.setUsername(createUserRqDto.username());
         user.setName(createUserRqDto.name());
         user.setLastname(createUserRqDto.lastname());
         return user;

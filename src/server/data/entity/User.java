@@ -12,7 +12,6 @@ public class User {
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
-                ", username='" + username + '\'' +
                 ", name='" + name + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", role=" + role +
@@ -23,20 +22,18 @@ public class User {
     private UUID id;
     private String login;
     private String password;
-    private String username;
     private String name;
     private String lastname;
-    private RoleEnum role;
+    private UUID role;
     private boolean isBlocked;
 
     public User() {
     }
 
-    public User(UUID id, String login, String password, String username, String name, String lastname, RoleEnum role, boolean isBlocked) {
+    public User(UUID id, String login, String password, String name, String lastname, UUID role, boolean isBlocked) {
         this.id = id;
         this.login = login;
         this.password = password;
-        this.username = username;
         this.name = name;
         this.lastname = lastname;
         this.role = role;
@@ -75,14 +72,6 @@ public class User {
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getName() {
         return name;
     }
@@ -99,11 +88,11 @@ public class User {
         this.lastname = lastname;
     }
 
-    public RoleEnum getRole() {
+    public UUID getRole() {
         return role;
     }
 
-    public void setRole(RoleEnum role) {
+    public void setRole(UUID role) {
         this.role = role;
     }
 
@@ -111,7 +100,7 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
-        return isBlocked == user.isBlocked && Objects.equals(id, user.id) && Objects.equals(getLogin(), user.getLogin()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getUsername(), user.getUsername()) && Objects.equals(getName(), user.getName()) && Objects.equals(getLastname(), user.getLastname()) && getRole() == user.getRole();
+        return isBlocked == user.isBlocked && Objects.equals(id, user.id) && Objects.equals(getLogin(), user.getLogin()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getName(), user.getName()) && Objects.equals(getLastname(), user.getLastname()) && getRole() == user.getRole();
     }
 
     @Override

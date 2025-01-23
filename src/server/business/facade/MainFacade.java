@@ -10,6 +10,7 @@ import server.presentation.dto.response.ResponseDto;
 import server.utils.exception.badrequest.UserNotFoundException;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class MainFacade {
 
     private final UserMapper userMapper;
 
-    public MainFacade() throws IOException {
+    public MainFacade() throws IOException, SQLException {
         userMapper = new UserMapper();
         userService = new UserService();
     }

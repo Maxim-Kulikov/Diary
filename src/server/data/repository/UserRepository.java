@@ -4,6 +4,7 @@ import db.DatabaseDriver;
 import server.data.entity.User;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,12 +15,12 @@ public class UserRepository {
 
     private final List<User> userList;
 
-    public UserRepository() throws IOException {
+    public UserRepository() throws IOException, SQLException {
         this.userList = DatabaseDriver.INSTANCE.readUserFromFile();
     }
 
     @Override
-    protected void finalize() throws IOException {
+    protected void finalize() throws IOException, SQLException {
         database.writeUsersToFile(userList);
     }
 

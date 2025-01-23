@@ -9,6 +9,7 @@ import server.utils.Validator;
 import server.utils.exception.badrequest.ConstraintViolationException;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.UUID;
 
 public class UserController {
@@ -16,7 +17,7 @@ public class UserController {
     private final MainFacade mainFacade;
     private UserRepository userRepository;
 
-    public UserController() throws IOException {
+    public UserController() throws IOException, SQLException {
         mainFacade = new MainFacade();
     }
 
