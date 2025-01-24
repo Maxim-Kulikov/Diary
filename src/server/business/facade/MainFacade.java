@@ -27,9 +27,9 @@ public class MainFacade {
         userService = new UserService();
     }
 
-    public ResponseDto<CreateUserRespDto> createUser(CreateUserRqDto createUserRqDto) throws IOException {
+    public ResponseDto<CreateUserRespDto> createUser(CreateUserRqDto createUserRqDto) throws IOException, SQLException {
         String login = createUserRqDto.login();
-        if (userService.findUserByLogin(login).isPresent()) {
+        if (userService.ifUserExists(login)) {
             return new ResponseDto<>(new ErrorDto("Пользователь с логином %s уже существует".formatted(login)));
         }
         User user = userMapper.toUser(createUserRqDto);
@@ -38,16 +38,16 @@ public class MainFacade {
         return userMapper.toResponseDto(createUserRespDto, null);
     }
 
-    public Optional<User> findUserById(UUID id) throws IOException {
+    public User findUserById(UUID id) throws IOException, SQLException {
         return userService.findUserByID(id);
     }
 
-    public void deleteUser(UUID id) throws IOException {
+    public void deleteUser(String login) throws IOException, SQLException {
 
-        if(userService.findUserByID(id).isEmpty()){
+        if(userService.ifUserExists(login) == true){
             throw new UserNotFoundException("User not found");
         }
-            userService.delete(id);
+            userService.delete(login);
     }
 
 

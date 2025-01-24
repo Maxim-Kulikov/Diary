@@ -1,7 +1,5 @@
 package server.data.entity;
 
-import server.business.enums.RoleEnum;
-
 import java.util.Objects;
 import java.util.UUID;
 
@@ -14,7 +12,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", lastname='" + lastname + '\'' +
-                ", role=" + role +
+                ", role_id=" + role_id +
                 ", isBlocked=" + isBlocked +
                 '}';
     }
@@ -24,7 +22,7 @@ public class User {
     private String password;
     private String name;
     private String lastname;
-    private UUID role;
+    private UUID role_id;
     private boolean isBlocked;
 
     public User() {
@@ -36,7 +34,7 @@ public class User {
         this.password = password;
         this.name = name;
         this.lastname = lastname;
-        this.role = role;
+        this.role_id = role;
         this.isBlocked = isBlocked;
     }
 
@@ -88,19 +86,19 @@ public class User {
         this.lastname = lastname;
     }
 
-    public UUID getRole() {
-        return role;
+    public UUID getRole_id() {
+        return role_id;
     }
 
-    public void setRole(UUID role) {
-        this.role = role;
+    public void setRole_id(UUID role_id) {
+        this.role_id = role_id;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
-        return isBlocked == user.isBlocked && Objects.equals(id, user.id) && Objects.equals(getLogin(), user.getLogin()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getName(), user.getName()) && Objects.equals(getLastname(), user.getLastname()) && getRole() == user.getRole();
+        return isBlocked == user.isBlocked && Objects.equals(id, user.id) && Objects.equals(getLogin(), user.getLogin()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getName(), user.getName()) && Objects.equals(getLastname(), user.getLastname()) && getRole_id() == user.getRole_id();
     }
 
     @Override
