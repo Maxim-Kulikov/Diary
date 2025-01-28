@@ -1,7 +1,5 @@
 package server.data.entity;
 
-import server.business.enums.RoleEnum;
-
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,10 +10,9 @@ public class User {
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
-                ", username='" + username + '\'' +
                 ", name='" + name + '\'' +
                 ", lastname='" + lastname + '\'' +
-                ", role=" + role +
+                ", role_id=" + role_id +
                 ", isBlocked=" + isBlocked +
                 '}';
     }
@@ -23,23 +20,21 @@ public class User {
     private UUID id;
     private String login;
     private String password;
-    private String username;
     private String name;
     private String lastname;
-    private RoleEnum role;
+    private UUID role_id;
     private boolean isBlocked;
 
     public User() {
     }
 
-    public User(UUID id, String login, String password, String username, String name, String lastname, RoleEnum role, boolean isBlocked) {
+    public User(UUID id, String login, String password, String name, String lastname, UUID role, boolean isBlocked) {
         this.id = id;
         this.login = login;
         this.password = password;
-        this.username = username;
         this.name = name;
         this.lastname = lastname;
-        this.role = role;
+        this.role_id = role;
         this.isBlocked = isBlocked;
     }
 
@@ -75,14 +70,6 @@ public class User {
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getName() {
         return name;
     }
@@ -99,19 +86,19 @@ public class User {
         this.lastname = lastname;
     }
 
-    public RoleEnum getRole() {
-        return role;
+    public UUID getRole_id() {
+        return role_id;
     }
 
-    public void setRole(RoleEnum role) {
-        this.role = role;
+    public void setRole_id(UUID role_id) {
+        this.role_id = role_id;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
-        return isBlocked == user.isBlocked && Objects.equals(id, user.id) && Objects.equals(getLogin(), user.getLogin()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getUsername(), user.getUsername()) && Objects.equals(getName(), user.getName()) && Objects.equals(getLastname(), user.getLastname()) && getRole() == user.getRole();
+        return isBlocked == user.isBlocked && Objects.equals(id, user.id) && Objects.equals(getLogin(), user.getLogin()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getName(), user.getName()) && Objects.equals(getLastname(), user.getLastname()) && getRole_id() == user.getRole_id();
     }
 
     @Override

@@ -9,6 +9,7 @@ import server.utils.Validator;
 import server.utils.exception.badrequest.ConstraintViolationException;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.UUID;
 
 public class UserController {
@@ -16,19 +17,19 @@ public class UserController {
     private final MainFacade mainFacade;
     private UserRepository userRepository;
 
-    public UserController() throws IOException {
+    public UserController() throws IOException, SQLException {
         mainFacade = new MainFacade();
     }
 
-    public ResponseDto<CreateUserRespDto> createAccount(CreateUserRqDto createUserRqDto) throws ConstraintViolationException, IOException {
+    public ResponseDto<CreateUserRespDto> createAccount(CreateUserRqDto createUserRqDto) throws ConstraintViolationException, IOException, SQLException {
         Validator.notNull(createUserRqDto.login());
         Validator.length(createUserRqDto.login(), 0, 20);
 
         return mainFacade.createUser(createUserRqDto);
     }
 
-    public void delete(UUID id) throws IOException {
-        mainFacade.deleteUser(id);
+    public void delete(String login) throws IOException, SQLException {
+        mainFacade.deleteUser(login);
     }
 }
 
