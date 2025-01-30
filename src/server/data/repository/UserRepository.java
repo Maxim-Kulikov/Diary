@@ -12,6 +12,8 @@ import java.util.*;
 
 public class UserRepository {
 
+    ConnectionPool connectionPool = ConnectionPool.getInstance();
+
     public UserRepository() throws SQLException {
     }
 
@@ -20,50 +22,38 @@ public class UserRepository {
     }
 
     public User save(User user) throws SQLException {
-        getRowsInserted(user);
+        insertUser(user);
         return user;
     }
 
     public User findUserByLogin(String login) throws SQLException {
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
-        User user = null;
+        String query = "SELECT * FROM users WHERE login = ?";
+        try (Connection connection = connectionPool.connectToDataBase();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            Connection connection = connectionPool.connectToDataBase();
-
-            String query = "SELECT * FROM users WHERE login = ?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, login);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                user = new User();
-                user.setId(UUID.fromString(resultSet.getString("id")));
-                user.setLogin(resultSet.getString("login"));
-                user.setPassword(resultSet.getString("password"));
-                user.setName(resultSet.getString("name"));
-                user.setLastname(resultSet.getString("lastname"));
-                user.setRole_id(UUID.fromString(resultSet.getString("role_id")));
-                user.setBlocked(resultSet.getBoolean("is_blocked"));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    User user = new User();
+                    user.setId(UUID.fromString(resultSet.getString("id")));
+                    user.setLogin(resultSet.getString("login"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setName(resultSet.getString("name"));
+                    user.setLastname(resultSet.getString("lastname"));
+                    user.setRole_id(UUID.fromString(resultSet.getString("role_id")));
+                    user.setBlocked(resultSet.getBoolean("is_blocked"));
+                    return user;
+                } else {
+                    System.out.println("No user found with login: " + login);
+                }
             }
-            if (resultSet != null) {
-                resultSet.close();
-            }
-            if (preparedStatement != null) {
-                preparedStatement.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
-
-        return user;
+        }
+        return null; // Return null if no matching record is found
     }
 
 
-
     public User findUserById(UUID id) throws SQLException {
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
         User user = null;
 
         Connection connection = connectionPool.connectToDataBase();
@@ -102,66 +92,69 @@ public class UserRepository {
     }
 
     public boolean isUserPresent(String login) throws SQLException {
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
-        Connection connection = connectionPool.connectToDataBase();
-        User user = findUserByLogin(login);
-
         String query = "SELECT EXISTS (SELECT 1 FROM users WHERE login = ?)";
 
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setString(1, login);
+        try (Connection connection = connectionPool.connectToDataBase();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-        ResultSet resultSet = preparedStatement.executeQuery();
-        if (resultSet.next()) {
-            return true;
+            preparedStatement.setString(1, login);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getBoolean(1);
+                }
+                return false;
+            }
         }
-        return false;
     }
+
 
     public void delete(String login) throws SQLException {
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
-        User user = null;
-
-        Connection connection = connectionPool.connectToDataBase();
-
         String query = "DELETE FROM users WHERE login = ?";
 
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setString(1, login);
+        try (Connection connection = connectionPool.connectToDataBase();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-        int rowsInserted = preparedStatement.executeUpdate();
-        System.out.println("Rows deleted: " + rowsInserted);
+            preparedStatement.setString(1, login);
+            int rowsDeleted = preparedStatement.executeUpdate();
+
+            if (rowsDeleted > 0) {
+                System.out.println("User deleted successfully: " + login);
+            } else {
+                System.out.println("User not found: " + login);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error occurred while deleting user: " + e.getMessage());
+            throw e;
+        }
     }
 
-    public List<Object> getRowsInserted(User user) throws SQLException {
-        List<Object> userList = new ArrayList<>();
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
-        Connection conn = connectionPool.connectToDataBase();
-
-        String insertQuery = "INSERT INTO users (id, login, password, name, lastname, role_id, is_blocked) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        PreparedStatement preparedStatement = conn.prepareStatement(insertQuery);
-
-        preparedStatement.setObject(1, user.getId());
-        preparedStatement.setString(2, user.getLogin());
-        preparedStatement.setString(3, user.getPassword());
-        preparedStatement.setString(4, user.getName());
-        preparedStatement.setString(5, user.getLastname());
-        preparedStatement.setObject(6, user.getRole_id());
-        preparedStatement.setBoolean(7, user.isBlocked());
-
-        userList.add(user.getId());
-        userList.add(user.getLogin());
-        userList.add(user.getPassword());
-        userList.add(user.getName());
-        userList.add(user.getLastname());
-        userList.add(user.getRole_id());
-        userList.add(user.isBlocked());
 
 
-        int rowsInserted = preparedStatement.executeUpdate();
-        System.out.println("Rows inserted: " + rowsInserted);
+    public void insertUser(User user) throws SQLException {
+        String insertQuery = "INSERT INTO users (id, name, lastname, login, password, role_id, is_blocked) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        return userList;
+        try (Connection conn = connectionPool.connectToDataBase();
+             PreparedStatement preparedStatement = conn.prepareStatement(insertQuery)) {
+
+            if (!isUserPresent(user.getLogin())) {
+                preparedStatement.setObject(1, user.getId());
+                preparedStatement.setString(2, user.getName());
+                preparedStatement.setString(3, user.getLastname());
+                preparedStatement.setString(4, user.getLogin());
+                preparedStatement.setString(5, user.getPassword());
+                preparedStatement.setObject(6, user.getRole_id());
+                preparedStatement.setBoolean(7, user.isBlocked());
+
+                int rowsInserted = preparedStatement.executeUpdate();
+                if (rowsInserted > 0) {
+                    System.out.println("User successfully inserted: " + user.getLogin());
+                } else {
+                    System.out.println("Failed to insert user: " + user.getLogin());
+                }
+            } else {
+                System.out.println("User already exists.");
+            }
+        }
     }
 }

@@ -9,11 +9,7 @@ import server.presentation.dto.response.ErrorDto;
 import server.presentation.dto.response.ResponseDto;
 import server.utils.exception.badrequest.UserNotFoundException;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class MainFacade {
@@ -22,12 +18,12 @@ public class MainFacade {
 
     private final UserMapper userMapper;
 
-    public MainFacade() throws IOException, SQLException {
+    public MainFacade() throws SQLException {
         userMapper = new UserMapper();
         userService = new UserService();
     }
 
-    public ResponseDto<CreateUserRespDto> createUser(CreateUserRqDto createUserRqDto) throws IOException, SQLException {
+    public ResponseDto<CreateUserRespDto> createUser(CreateUserRqDto createUserRqDto) throws SQLException {
         String login = createUserRqDto.login();
         if (userService.ifUserExists(login)) {
             return new ResponseDto<>(new ErrorDto("Пользователь с логином %s уже существует".formatted(login)));
@@ -38,13 +34,13 @@ public class MainFacade {
         return userMapper.toResponseDto(createUserRespDto, null);
     }
 
-    public User findUserById(UUID id) throws IOException, SQLException {
+    public User findUserById(UUID id) throws SQLException {
         return userService.findUserByID(id);
     }
 
-    public void deleteUser(String login) throws IOException, SQLException {
+    public void deleteUser(String login) throws SQLException {
 
-        if(userService.ifUserExists(login) == true){
+        if(userService.ifUserExists(login)){
             throw new UserNotFoundException("User not found");
         }
             userService.delete(login);

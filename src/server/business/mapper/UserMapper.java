@@ -16,7 +16,7 @@ public class UserMapper {
     }
 
     public CreateUserRespDto toCreateUserRespDto(User user) {
-        return new CreateUserRespDto(user.getId(), user.getLogin(), user.getName(), user.getLastname(), user.isBlocked());
+        return new CreateUserRespDto(user.getId(), user.getLogin(), user.getName(), user.getLastname(), user.getRole_id(), user.isBlocked());
     }
 
     public User toUser(CreateUserRqDto createUserRqDto) {
@@ -25,6 +25,8 @@ public class UserMapper {
         user.setPassword(createUserRqDto.password());
         user.setName(createUserRqDto.name());
         user.setLastname(createUserRqDto.lastname());
+        user.setId(createUserRqDto.role());
+        user.setRole_id(createUserRqDto.role());
         return user;
     }
 

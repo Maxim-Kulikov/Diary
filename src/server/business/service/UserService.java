@@ -3,9 +3,7 @@ package server.business.service;
 import server.data.entity.User;
 import server.data.repository.UserRepository;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Optional;
 import java.util.UUID;
 
 public class UserService {
@@ -15,8 +13,8 @@ public class UserService {
         this.userRepository = new UserRepository();
     }
 
-    public User findUserByLogin(String login) throws SQLException {
-        return userRepository.findUserByLogin(login);
+    public void findUserByLogin(String login) throws SQLException {
+        userRepository.findUserByLogin(login);
     }
 
     public User save(User user) throws SQLException {
