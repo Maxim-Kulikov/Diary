@@ -20,8 +20,8 @@ public class ClientRequest {
         userController.createAccount(createUserRqDto);
     }
 
-    public void deleteUser(User user) throws SQLException, IOException {
-        userController.delete(user.getLogin());
+    public void deleteUser(String login) throws SQLException, IOException {
+        userController.delete(login);
     }
 
     public User findUserById(UUID id) throws SQLException, IOException {

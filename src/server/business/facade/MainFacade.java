@@ -40,7 +40,7 @@ public class MainFacade {
 
     public void deleteUser(String login) throws SQLException {
 
-        if(userService.ifUserExists(login)){
+        if(!userService.ifUserExists(login)){
             throw new UserNotFoundException("User not found");
         }
             userService.delete(login);

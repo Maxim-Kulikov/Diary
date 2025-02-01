@@ -43,13 +43,14 @@ public class UserRepository {
                     user.setLastname(resultSet.getString("lastname"));
                     user.setRole_id(UUID.fromString(resultSet.getString("role_id")));
                     user.setBlocked(resultSet.getBoolean("is_blocked"));
+                    connectionPool.releaseConnection(connection);
                     return user;
                 } else {
                     System.out.println("No user found with login: " + login);
                 }
             }
         }
-        return null; // Return null if no matching record is found
+        return null;
     }
 
 
@@ -120,6 +121,7 @@ public class UserRepository {
 
             if (rowsDeleted > 0) {
                 System.out.println("User deleted successfully: " + login);
+                connectionPool.releaseConnection(connection);
             } else {
                 System.out.println("User not found: " + login);
             }
