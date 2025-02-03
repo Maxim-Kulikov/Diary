@@ -26,6 +26,47 @@ public class UserRepository {
         return user;
     }
 
+    public void updateUser(String login) throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+        List<String> allowedColumns = new ArrayList<>();
+        allowedColumns.add("login");
+        allowedColumns.add("password");
+        allowedColumns.add("name");
+        allowedColumns.add("lastname");
+        allowedColumns.add("is_blocked");
+
+        System.out.println("Please enter the column you want to update (name, lastname, login, password, is_blocked): ");
+        String column = scanner.nextLine();
+
+        if (!allowedColumns.contains(column)) {
+            System.out.println("Invalid column name. Allowed columns are: " + allowedColumns);
+        }
+
+        System.out.println("Please enter the updated value: ");
+        String value = scanner.nextLine();
+        User user = findUserByLogin(login);
+        if (user.getLogin() == null) {
+            System.out.println("User not found with login: " + login);
+        }
+
+        String query = "UPDATE users SET " + column + " = ? WHERE id = ?";
+
+        try (Connection connection = connectionPool.connectToDataBase();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setObject(1, value);
+            preparedStatement.setObject(2, user.getId());
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("User successfully updated.");
+            } else {
+                System.out.println("Failed to update user.");
+            }
+        }
+    }
+
+
     public User findUserByLogin(String login) throws SQLException {
         String query = "SELECT * FROM users WHERE login = ?";
         try (Connection connection = connectionPool.connectToDataBase();
@@ -43,7 +84,6 @@ public class UserRepository {
                     user.setLastname(resultSet.getString("lastname"));
                     user.setRole_id(UUID.fromString(resultSet.getString("role_id")));
                     user.setBlocked(resultSet.getBoolean("is_blocked"));
-                    connectionPool.releaseConnection(connection);
                     return user;
                 } else {
                     System.out.println("No user found with login: " + login);

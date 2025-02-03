@@ -33,5 +33,13 @@ public class UserController {
     public User findUserById(UUID id) throws SQLException {
          return mainFacade.findUserById(id);
     }
+
+    public User findUserByLogin(String login) throws SQLException {
+        return mainFacade.findUserByLogin(login);
+    }
+
+    public void updateUser(String login) throws SQLException {
+        mainFacade.updateUser(login);
+    }
 }
 

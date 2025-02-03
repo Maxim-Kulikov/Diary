@@ -38,6 +38,14 @@ public class MainFacade {
         return userService.findUserByID(id);
     }
 
+    public User findUserByLogin(String login) throws SQLException {
+        return userService.findUserByLogin(login);
+    }
+
+    public void updateUser(String login) throws SQLException {
+        userService.update(login);
+    }
+
     public void deleteUser(String login) throws SQLException {
 
         if(!userService.ifUserExists(login)){
@@ -45,6 +53,7 @@ public class MainFacade {
         }
             userService.delete(login);
     }
+
 
 
 }

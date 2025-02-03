@@ -13,8 +13,8 @@ public class UserService {
         this.userRepository = new UserRepository();
     }
 
-    public void findUserByLogin(String login) throws SQLException {
-        userRepository.findUserByLogin(login);
+    public User findUserByLogin(String login) throws SQLException {
+        return userRepository.findUserByLogin(login);
     }
 
     public User save(User user) throws SQLException {
@@ -33,6 +33,10 @@ public class UserService {
 
     public void delete(String login) throws SQLException {
         userRepository.delete(login);
+    }
+
+    public void update(String login) throws SQLException {
+        userRepository.updateUser(login);
     }
 
 
