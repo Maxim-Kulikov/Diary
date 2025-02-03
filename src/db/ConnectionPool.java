@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ConnectionPool {
 
@@ -18,17 +17,8 @@ public class ConnectionPool {
     private static ConnectionPool instance;
 
     public static ConnectionPool getInstance() throws SQLException {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Type in the URL: ");
-        String jdbcUrl = scanner.nextLine();
-        System.out.println("Type in the username: ");
-        String  username = scanner.nextLine();
-        System.out.println("Type in the password: ");
-        String password = scanner.nextLine();
-        System.out.println("Type in the MAX_POOL_SIZE: ");
-        int MAX_POOL_SIZE = scanner.nextInt();
         if (instance == null) {
-            instance = new ConnectionPool(jdbcUrl, username, password, MAX_POOL_SIZE);
+            instance = new ConnectionPool("jdbc:postgresql://localhost:5432/Diary", "postgres", "postgres", 10);
         }
         return instance;
     }

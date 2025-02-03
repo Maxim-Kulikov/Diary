@@ -18,17 +18,17 @@ public class User {
     }
 
     private UUID id;
-    private String login;
-    private String password;
     private String name;
     private String lastname;
+    private String login;
+    private String password;
     private UUID role_id;
     private boolean isBlocked;
 
     public User() {
     }
 
-    public User(UUID id, String login, String password, String name, String lastname, UUID role, boolean isBlocked) {
+    public User(UUID id, String name, String lastname, String login, String password, UUID role, boolean isBlocked) {
         this.id = id;
         this.login = login;
         this.password = password;
