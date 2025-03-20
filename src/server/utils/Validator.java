@@ -30,7 +30,7 @@ public class Validator {
         }
     }
 
-    public static void length(String input, int min, int max) throws ConstraintViolationException {
+    public static void length (String input, int min, int max) throws ConstraintViolationException {
         if (input == null) {
             throw new ConstraintViolationException("The input is null");
         }

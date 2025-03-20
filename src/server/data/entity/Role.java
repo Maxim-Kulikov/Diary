@@ -2,32 +2,27 @@ package server.data.entity;
 
 import java.util.UUID;
 
-public class Role {
-    private UUID id;
-    private String name;
+public enum Role {
+    ADMIN(UUID.fromString("d65e91f2-68bd-4578-93cf-e0bc3ddd0187")),
+    PUPIL(UUID.fromString("d65e91f2-68bd-4578-93cf-e0bc3ddd0183")),
+    TEACHER(UUID.fromString("d65e91f2-68bd-4578-93cf-e0bc3ddd0185"));
 
-    public Role(UUID id, String name) {
-        this.id = id;
-        this.name = name;
+    private final UUID uuid;
+
+    Role(UUID uuid) {
+        this.uuid = uuid;
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public static Role fromRole(UUID uuid) {
+        for (Role role : Role.values()) {
+            if (role.getUuid().equals(uuid)) {
+                return role;
+            }
+        }
+        throw new IllegalArgumentException("Invalid UUID: " + uuid);
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    //"d65e91f2-68bd-4578-93cf-e0bc3ddd0183" - pupil
-    //"d65e91f2-68bd-4578-93cf-e0bc3ddd0185" - teacher
 }
-

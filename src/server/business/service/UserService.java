@@ -1,9 +1,12 @@
 package server.business.service;
 
+import server.data.entity.SchoolClass;
 import server.data.entity.User;
 import server.data.repository.UserRepository;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class UserService {
@@ -13,7 +16,7 @@ public class UserService {
         this.userRepository = new UserRepository();
     }
 
-    public User findUserByLogin(String login) throws SQLException {
+    public Optional<User> findUserByLogin(String login) throws SQLException {
         return userRepository.findUserByLogin(login);
     }
 
@@ -23,22 +26,19 @@ public class UserService {
         return user;
     }
 
-    public User findUserByID(UUID id) throws SQLException {
+    public Optional<User> findUserByID(UUID id) throws SQLException {
         return userRepository.findUserById(id);
     }
 
-    public boolean ifUserExists(String login) throws SQLException {
-        return userRepository.isUserPresent(login);
-    }
-
-    public void delete(String login) throws SQLException {
-        userRepository.delete(login);
+    public void delete(User user) throws SQLException {
+        userRepository.deleteUser(user.getLogin());
     }
 
     public void update(String login) throws SQLException {
         userRepository.updateUser(login);
     }
 
-
-
+    public List<User> findPupilsOfClass(SchoolClass schoolClass) throws SQLException {
+        return userRepository.getAllPupilsOfClass(schoolClass);
+    }
 }

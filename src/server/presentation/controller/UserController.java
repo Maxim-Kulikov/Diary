@@ -4,11 +4,13 @@ import server.business.facade.MainFacade;
 import server.data.entity.User;
 import server.presentation.dto.request.CreateUserRqDto;
 import server.presentation.dto.response.CreateUserRespDto;
+import server.presentation.dto.response.ErrorDto;
 import server.presentation.dto.response.ResponseDto;
 import server.utils.Validator;
 import server.utils.exception.badrequest.ConstraintViolationException;
 
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.UUID;
 
 public class UserController {
@@ -26,20 +28,28 @@ public class UserController {
         return mainFacade.createUser(createUserRqDto);
     }
 
-    public void delete(String login) throws SQLException {
-        mainFacade.deleteUser(login);
+    public ResponseDto<Void> deleteUser(User user) throws SQLException, ConstraintViolationException {
+        if (findUserByLogin(user.getLogin()).getResult().isPresent()) {
+            Validator.notNull(user);
+            return mainFacade.deleteUser(user);
+        }
+        return new ResponseDto<>(Optional.empty(), new ErrorDto("User not found"));
     }
 
-    public User findUserById(UUID id) throws SQLException {
+    public ResponseDto<User> findUserById(UUID id) throws SQLException {
          return mainFacade.findUserById(id);
     }
 
-    public User findUserByLogin(String login) throws SQLException {
+    public ResponseDto<User> findUserByLogin(String login) throws SQLException {
         return mainFacade.findUserByLogin(login);
     }
 
-    public void updateUser(String login) throws SQLException {
-        mainFacade.updateUser(login);
+    public ResponseDto<Void> updateUser(String login) throws SQLException, ConstraintViolationException {
+        if (findUserByLogin(login).getResult().isPresent()) {
+            Validator.notNull(login);
+            return mainFacade.updateUser(login);
+        }
+        return new ResponseDto<>(Optional.empty(), new ErrorDto("User not found"));
     }
 }
 
