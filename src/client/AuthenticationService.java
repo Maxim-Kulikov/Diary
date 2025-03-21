@@ -58,7 +58,7 @@ public class AuthenticationService {
         return true;
     }
 
-    private boolean validatePassword(String password) throws SQLException {
+    private boolean validatePassword(String password) {
 
         if (password.isEmpty()) {
             System.out.println("Password cannot be empty");

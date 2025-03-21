@@ -13,6 +13,7 @@ import server.utils.exception.badrequest.ConstraintViolationException;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 public class WeekScheduleController {
 
@@ -35,5 +36,9 @@ public class WeekScheduleController {
 
     public List<Lesson> findAllLessonsInADay(DayOfWeek dayOfWeek, SchoolClass schoolClass) throws SQLException {
         return facade.findAllLessonsInADay(dayOfWeek, schoolClass.getId());
+    }
+
+    public ResponseDto<WeekSchedule> findLessonById(UUID id) throws SQLException {
+        return facade.findWeekScheduleById(id);
     }
 }

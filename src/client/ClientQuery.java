@@ -244,18 +244,12 @@ public class ClientQuery {
             String lessonId = scanner.nextLine();
             System.out.println("Enter lesson number: ");
             String lessonNumber = scanner.nextLine();
-            weekScheduleController.addWeekSchedule(new WeekScheduleRqDto(Integer.valueOf(dayOfWeek), UUID.fromString(lessonId), Integer.valueOf(lessonNumber)));
+            weekScheduleController.addWeekSchedule(new WeekScheduleRqDto(DayOfWeek.valueOf(dayOfWeek).getValue(), UUID.fromString(lessonId), Integer.valueOf(lessonNumber)));
         }
         if (value == 23) {
-            System.out.println("Enter weekschedule ID: ");
+            System.out.println("Enter WeekSchedule ID: ");
             String weekScheduleId = scanner.nextLine();
-            System.out.println("Enter day of week in CAPS: ");
-            String dayOfWeek = scanner.nextLine();
-            System.out.println("Enter lesson ID: ");
-            String lessonId = scanner.nextLine();
-            System.out.println("Enter lesson number: ");
-            String lessonNumber = scanner.nextLine();
-            weekScheduleController.removeLessonFromSchedule(new WeekSchedule(UUID.fromString(weekScheduleId), Integer.valueOf(dayOfWeek), UUID.fromString(lessonId), Integer.valueOf(lessonNumber)));
+            weekScheduleController.removeLessonFromSchedule(weekScheduleController.findLessonById(UUID.fromString(weekScheduleId)).getResult().orElse(null));
         }
         if (value == 24) {
             System.out.println("Enter your login:");

@@ -28,31 +28,29 @@ public class WeekScheduleRepository {
         return weekSchedule;
     }
 
-    public void insertLessonInSchedule(WeekSchedule weekSchedule) {
+    public void insertLessonInSchedule(WeekSchedule weekSchedule) throws SQLException {
         String query = "INSERT INTO week_schedule VALUES (?, ?, ?, ?)";
+        Connection connection = null;
 
-        try (Connection connection = connectionPool.connectToDataBase();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try {
+            connection = connectionPool.connectToDataBase();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setObject(1, weekSchedule.getId());
-            preparedStatement.setObject(3, weekSchedule.getWeek_day_id());
-            preparedStatement.setObject(4, weekSchedule.getLesson_id());
-            preparedStatement.setObject(5, weekSchedule.getLesson_number());
+            preparedStatement.setObject(2, weekSchedule.getWeek_day_id());
+            preparedStatement.setObject(3, weekSchedule.getLesson_id());
+            preparedStatement.setObject(4, weekSchedule.getLesson_number());
 
-            if (weekSchedule.getLesson_number() == null) {
                 int rowsAffected = preparedStatement.executeUpdate();
                 if (rowsAffected > 0) {
                     System.out.println("Lesson " + weekSchedule.getLesson_id() + " has been scheduled to " + weekSchedule.getWeek_day_id());
-                    connectionPool.releaseConnection(connection);
                 } else {
                     System.out.println("Error inserting day in schedule");
-                    connectionPool.releaseConnection(connection);
                 }
-            } else {
-                System.out.println("Lesson place is occupied");
-                connectionPool.releaseConnection(connection);
-            }
+
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            connectionPool.releaseConnection(connection);
         }
     }
 
@@ -129,7 +127,7 @@ public class WeekScheduleRepository {
                 weekSchedule = new WeekSchedule();
                 weekSchedule.setId(UUID.fromString(resultSet.getString("id")));
                 weekSchedule.setLesson_number(resultSet.getInt("lesson_number"));
-                weekSchedule.setWeek_day_id(Integer.valueOf(resultSet.getString("week_day_id")));
+                weekSchedule.setWeek_day_id(Integer.valueOf(resultSet.getString("day_of_week_id")));
                 weekSchedule.setLesson_id(UUID.fromString(resultSet.getString("lesson_id")));
             }
 
