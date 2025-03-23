@@ -1,39 +1,82 @@
 package server.data.repository;
 
 import db.ConnectionPool;
+import server.data.entity.SchoolClass;
 import server.data.entity.User;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 public class UserRepository {
 
+    ConnectionPool connectionPool = ConnectionPool.getInstance();
+
     public UserRepository() throws SQLException {
     }
 
-    @Override
-    protected void finalize() throws IOException, SQLException {
-    }
-
     public User save(User user) throws SQLException {
-        getRowsInserted(user);
+        insertUser(user);
         return user;
     }
 
-    public User findUserByLogin(String login) throws SQLException {
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
+    public void updateUser(String login) throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+        List<String> allowedColumns = new ArrayList<>();
+        Connection connection = null;
+        allowedColumns.add("login");
+        allowedColumns.add("password");
+        allowedColumns.add("name");
+        allowedColumns.add("lastname");
+        allowedColumns.add("is_blocked");
+        allowedColumns.add("role_id");
+        allowedColumns.add("class_id");
+
+        System.out.println("Please enter the column you want to update (name, lastname, login, password, is_blocked, role_id, class_id): ");
+        String column = scanner.nextLine();
+
+        if (!allowedColumns.contains(column)) {
+            System.out.println("Invalid column name. Allowed columns are: " + allowedColumns);
+        }
+
+        System.out.println("Please enter the updated value: ");
+        String value = scanner.nextLine();
+        User user = findUserByLogin(login).orElse(null);
+        if (user != null && user.getLogin() == null) {
+            System.out.println("User not found with login: " + login);
+        }
+
+        String query = "UPDATE users SET " + column + " = ? WHERE id = ?";
+
+        try {
+            connection = connectionPool.connectToDataBase();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setObject(1, value);
+            preparedStatement.setObject(2, user.getId());
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("User successfully updated.");
+            } else {
+                System.out.println("Failed to update user.");
+            }
+        } finally {
+            if (connection != null) {
+                connectionPool.releaseConnection(connection);
+            }
+        }
+    }
+
+    public Optional<User> findUserByLogin(String login) throws SQLException {
         User user = null;
+        Connection connection = null;
 
-            Connection connection = connectionPool.connectToDataBase();
-
+        try {
+            connection = connectionPool.connectToDataBase();
             String query = "SELECT * FROM users WHERE login = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, login);
+            preparedStatement.setObject(1, login);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -46,122 +89,184 @@ public class UserRepository {
                 user.setLastname(resultSet.getString("lastname"));
                 user.setRole_id(UUID.fromString(resultSet.getString("role_id")));
                 user.setBlocked(resultSet.getBoolean("is_blocked"));
+
+                String classIdStr = resultSet.getString("class_id");
+                if (classIdStr != null && !resultSet.wasNull()) {
+                    user.setClass_id(UUID.fromString(classIdStr));
+                } else {
+                    user.setClass_id(null);
+                }
             }
-            if (resultSet != null) {
-                resultSet.close();
-            }
-            if (preparedStatement != null) {
-                preparedStatement.close();
-            }
+
+            return Optional.ofNullable(user);
+        } finally {
             if (connection != null) {
-                connection.close();
+                connectionPool.releaseConnection(connection);
+            }
+        }
+    }
+
+    public Optional<User> findUserById(UUID id) throws SQLException {
+        User user = null;
+        Connection connection = null;
+
+        try {
+            connection = connectionPool.connectToDataBase();
+            String query = "SELECT * FROM users WHERE id = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setObject(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                user = new User();
+                user.setId(UUID.fromString(resultSet.getString("id")));
+                user.setLogin(resultSet.getString("login"));
+                user.setPassword(resultSet.getString("password"));
+                user.setName(resultSet.getString("name"));
+                user.setLastname(resultSet.getString("lastname"));
+                user.setRole_id(UUID.fromString(resultSet.getString("role_id")));
+                user.setBlocked(resultSet.getBoolean("is_blocked"));
+
+                String classIdStr = resultSet.getString("class_id");
+                if (classIdStr != null && !resultSet.wasNull()) {
+                    user.setClass_id(UUID.fromString(classIdStr));
+                } else {
+                    user.setClass_id(null);
+                }
             }
 
-        return user;
+            return Optional.ofNullable(user);
+        } finally {
+            if (connection != null) {
+                connectionPool.releaseConnection(connection);
+            }
+        }
     }
 
-
-
-    public User findUserById(UUID id) throws SQLException {
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
+    public Optional<User> findPupilByClassId(UUID class_id) throws SQLException {
         User user = null;
+        Connection connection = null;
 
-        Connection connection = connectionPool.connectToDataBase();
+        try {
+            connection = connectionPool.connectToDataBase();
+            String query = "SELECT * FROM users WHERE class_id = ?";
 
-        String query = "SELECT * FROM users WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setObject(1, class_id);
 
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setObject(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-        ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                user = new User();
+                user.setId(UUID.fromString(resultSet.getString("id")));
+                user.setLogin(resultSet.getString("login"));
+                user.setPassword(resultSet.getString("password"));
+                user.setName(resultSet.getString("name"));
+                user.setLastname(resultSet.getString("lastname"));
+                user.setRole_id(UUID.fromString(resultSet.getString("role_id")));
+                user.setBlocked(resultSet.getBoolean("is_blocked"));
+                user.setClass_id(UUID.fromString(resultSet.getString("class_id")));
+            }
 
-        if (resultSet.next()) {
-            user = new User();
-            user.setId(UUID.fromString(resultSet.getString("id")));
-            user.setLogin(resultSet.getString("login"));
-            user.setPassword(resultSet.getString("password"));
-            user.setName(resultSet.getString("name"));
-            user.setLastname(resultSet.getString("lastname"));
-            user.setRole_id(UUID.fromString(resultSet.getString("role_id")));
-            user.setBlocked(resultSet.getBoolean("is_blocked"));
+            return Optional.ofNullable(user);
+        } finally {
+            if (connection != null) {
+                connectionPool.releaseConnection(connection);
+            }
         }
-        else {
-            throw new SQLException("User not found");
-        }
-        if (resultSet != null) {
-            resultSet.close();
-        }
-        if (preparedStatement != null) {
-            preparedStatement.close();
-        }
-        if (connection != null) {
-            connection.close();
-        }
-
-        return user;
     }
 
-    public boolean isUserPresent(String login) throws SQLException {
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
-        Connection connection = connectionPool.connectToDataBase();
-        User user = findUserByLogin(login);
-
-        String query = "SELECT EXISTS (SELECT 1 FROM users WHERE login = ?)";
-
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setString(1, login);
-
-        ResultSet resultSet = preparedStatement.executeQuery();
-        if (resultSet.next()) {
-            return true;
-        }
-        return false;
-    }
-
-    public void delete(String login) throws SQLException {
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
-        User user = null;
-
-        Connection connection = connectionPool.connectToDataBase();
-
+    public void deleteUser(String login) throws SQLException {
         String query = "DELETE FROM users WHERE login = ?";
+        Connection connection = null;
 
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setString(1, login);
+        try {
+            connection = connectionPool.connectToDataBase();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
 
-        int rowsInserted = preparedStatement.executeUpdate();
-        System.out.println("Rows deleted: " + rowsInserted);
+            preparedStatement.setString(1, login);
+            int rowsDeleted = preparedStatement.executeUpdate();
+
+            if (rowsDeleted > 0) {
+                System.out.println("User deleted successfully: " + login);
+                connectionPool.releaseConnection(connection);
+            } else {
+                System.out.println("User not found: " + login);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connectionPool.releaseConnection(connection);
+            }
+        }
     }
 
-    public List<Object> getRowsInserted(User user) throws SQLException {
-        List<Object> userList = new ArrayList<>();
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
-        Connection conn = connectionPool.connectToDataBase();
+    public void insertUser(User user) throws SQLException {
+        String insertQuery = "INSERT INTO users (id, name, lastname, login, password, role_id, is_blocked, class_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        Connection connection = null;
 
-        String insertQuery = "INSERT INTO users (id, login, password, name, lastname, role_id, is_blocked) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try {
+            connection = connectionPool.connectToDataBase();
+            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
 
-        PreparedStatement preparedStatement = conn.prepareStatement(insertQuery);
+            preparedStatement.setObject(1, user.getId());
+            preparedStatement.setString(2, user.getName());
+            preparedStatement.setString(3, user.getLastname());
+            preparedStatement.setString(4, user.getLogin());
+            preparedStatement.setString(5, user.getPassword());
+            preparedStatement.setObject(6, user.getRole_id());
+            preparedStatement.setBoolean(7, user.isBlocked());
+            preparedStatement.setObject(8, user.getClass_id());
 
-        preparedStatement.setObject(1, user.getId());
-        preparedStatement.setString(2, user.getLogin());
-        preparedStatement.setString(3, user.getPassword());
-        preparedStatement.setString(4, user.getName());
-        preparedStatement.setString(5, user.getLastname());
-        preparedStatement.setObject(6, user.getRole_id());
-        preparedStatement.setBoolean(7, user.isBlocked());
+            int rowsInserted = preparedStatement.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("User successfully inserted: " + user.getLogin());
+                connectionPool.releaseConnection(connection);
+            } else {
+                System.out.println("Failed to insert absence user: " + user.getLogin());
+                connectionPool.releaseConnection(connection);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connectionPool.releaseConnection(connection);
+            }
+        }
+    }
 
-        userList.add(user.getId());
-        userList.add(user.getLogin());
-        userList.add(user.getPassword());
-        userList.add(user.getName());
-        userList.add(user.getLastname());
-        userList.add(user.getRole_id());
-        userList.add(user.isBlocked());
+    public List<User> getAllPupilsOfClass(SchoolClass schoolClass) throws SQLException {
+        String query = "SELECT * FROM users WHERE class_id = ?";
+        List<User> pupils = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = connectionPool.connectToDataBase();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
 
+            preparedStatement.setObject(1, schoolClass.getId());
 
-        int rowsInserted = preparedStatement.executeUpdate();
-        System.out.println("Rows inserted: " + rowsInserted);
-
-        return userList;
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    User user = new User();
+                    user.setId(findPupilByClassId(schoolClass.getId()).get().getId());
+                    user.setLogin(findPupilByClassId(schoolClass.getId()).get().getLogin());
+                    user.setPassword(findPupilByClassId(schoolClass.getId()).get().getPassword());
+                    user.setName(findPupilByClassId(schoolClass.getId()).get().getName());
+                    user.setLastname(findPupilByClassId(schoolClass.getId()).get().getLastname());
+                    user.setRole_id(findPupilByClassId(schoolClass.getId()).get().getRole_id());
+                    user.setBlocked(findPupilByClassId(schoolClass.getId()).get().isBlocked());
+                    user.setClass_id(findPupilByClassId(schoolClass.getId()).get().getClass_id());
+                    pupils.add(user);
+                }
+            }
+            return pupils;
+        } finally {
+            if (connection != null) {
+                connectionPool.releaseConnection(connection);
+            }
+        }
     }
 }

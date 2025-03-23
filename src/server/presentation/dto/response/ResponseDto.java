@@ -1,10 +1,12 @@
 package server.presentation.dto.response;
 
-public class  ResponseDto<T> {
-    private T result;
+import java.util.Optional;
+
+public class ResponseDto<T> {
+    private Optional<T> result;
     private ErrorDto errorDto;
 
-    public ResponseDto(T result, ErrorDto errorDto) {
+    public ResponseDto(Optional<T> result, ErrorDto errorDto) {
         this.result = result;
         this.errorDto = errorDto;
     }
@@ -13,11 +15,11 @@ public class  ResponseDto<T> {
         this.errorDto = errorDto;
     }
 
-    public T getResult() {
+    public Optional<T> getResult() {
         return result;
     }
 
-    public void setResult(T result) {
+    public void setResult(Optional<T> result) {
         this.result = result;
     }
 

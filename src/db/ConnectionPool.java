@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ConnectionPool {
 
@@ -18,17 +17,8 @@ public class ConnectionPool {
     private static ConnectionPool instance;
 
     public static ConnectionPool getInstance() throws SQLException {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Type in the URL: ");
-        String jdbcUrl = scanner.nextLine();
-        System.out.println("Type in the username: ");
-        String  username = scanner.nextLine();
-        System.out.println("Type in the password: ");
-        String password = scanner.nextLine();
-        System.out.println("Type in the MAX_POOL_SIZE: ");
-        int MAX_POOL_SIZE = scanner.nextInt();
         if (instance == null) {
-            instance = new ConnectionPool(jdbcUrl, username, password, MAX_POOL_SIZE);
+            instance = new ConnectionPool("jdbc:postgresql://localhost:5432/Diary", "postgres", "postgres", 50);
         }
         return instance;
     }
@@ -38,15 +28,23 @@ public class ConnectionPool {
         this.username = username;
         this.password = password;
         this.MAX_POOL_SIZE = MAX_POOL_SIZE;
-        for (int i = 0; i <= MAX_POOL_SIZE; i++) {
+        for (int i = 0; i < MAX_POOL_SIZE; i++) {
             availableConnections.add(DriverManager.getConnection(jdbcUrl, username, password));
         }
     }
 
     public synchronized Connection connectToDataBase() throws SQLException {
         if (availableConnections.isEmpty()) {
-            System.out.println("No available connections in the pool.");
+            if (usedConnections.size() < MAX_POOL_SIZE) {
+                Connection newConnection = DriverManager.getConnection(jdbcUrl, username, password);
+                usedConnections.add(newConnection);
+                System.out.println("Created new connection: " + newConnection);
+                return newConnection;
+            } else {
+                throw new SQLException("No available connections");
+            }
         }
+
         Connection connection = availableConnections.remove(availableConnections.size() - 1);
         usedConnections.add(connection);
         System.out.println("Got connection: " + connection);
@@ -55,18 +53,40 @@ public class ConnectionPool {
 
     public synchronized void releaseConnection(Connection connection) throws SQLException {
         if (connection != null) {
-            usedConnections.remove(connection);
-            availableConnections.add(connection);
+            if (!connection.isClosed() && connection.isValid(1)) {
+                usedConnections.remove(connection);
+                availableConnections.add(connection);
+                System.out.println("Released connection: " + connection);
+            } else {
+                // Connection is invalid, remove it and create a new one if needed
+                usedConnections.remove(connection);
+                connection.close();
+                System.out.println("Closed invalid connection: " + connection);
+            }
         }
     }
 
-    public synchronized void closeAllConnections() throws SQLException {
+    public synchronized void closeAllConnections() {
         for (Connection connection : availableConnections) {
-            connection.close();
+            try {
+                if (!connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error closing connection: " + e.getMessage());
+            }
         }
+
         for (Connection connection : usedConnections) {
-            connection.close();
+            try {
+                if (!connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error closing connection: " + e.getMessage());
+            }
         }
+
         availableConnections.clear();
         usedConnections.clear();
     }

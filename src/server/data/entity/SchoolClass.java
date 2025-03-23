@@ -2,18 +2,20 @@ package server.data.entity;
 
 import java.util.UUID;
 
-public class Class {
+public class SchoolClass {
     private UUID id;
     private String letter;
-    private int number;
-    private User teacher_id;
+    private String number;
+    private UUID teacher_id;
 
-    public Class(UUID id, String letter, int number, User teacher_id) {
+    public SchoolClass(UUID id, String letter, String number, UUID teacher_id) {
         this.id = id;
         this.letter = letter;
         this.number = number;
         this.teacher_id = teacher_id;
     }
+
+    public SchoolClass() {}
 
     public UUID getId() {
         return id;
@@ -31,19 +33,19 @@ public class Class {
         this.letter = letter;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
-    public User getTeacher_id() {
+    public UUID getTeacher_id() {
         return teacher_id;
     }
 
-    public void setTeacher_id(User teacher_id) {
+    public void setTeacher_id(UUID teacher_id) {
         this.teacher_id = teacher_id;
     }
 }

@@ -11,6 +11,8 @@ public class Subject {
         this.name = name;
     }
 
+    public Subject() {}
+
     public UUID getId() {
         return id;
     }

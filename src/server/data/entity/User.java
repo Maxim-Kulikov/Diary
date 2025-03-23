@@ -14,21 +14,23 @@ public class User {
                 ", lastname='" + lastname + '\'' +
                 ", role_id=" + role_id +
                 ", isBlocked=" + isBlocked +
+                ", classId=" + class_id +
                 '}';
     }
 
     private UUID id;
-    private String login;
-    private String password;
     private String name;
     private String lastname;
+    private String login;
+    private String password;
     private UUID role_id;
     private boolean isBlocked;
+    private UUID class_id;
 
     public User() {
     }
 
-    public User(UUID id, String login, String password, String name, String lastname, UUID role, boolean isBlocked) {
+    public User(UUID id, String name, String lastname, String login, String password, UUID role, boolean isBlocked, UUID class_id) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -36,6 +38,7 @@ public class User {
         this.lastname = lastname;
         this.role_id = role;
         this.isBlocked = isBlocked;
+        this.class_id = class_id;
     }
 
     public UUID getId() {
@@ -94,11 +97,19 @@ public class User {
         this.role_id = role_id;
     }
 
+    public UUID getClass_id() {
+        return class_id;
+    }
+
+    public void setClass_id(UUID class_id) {
+        this.class_id = class_id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
-        return isBlocked == user.isBlocked && Objects.equals(id, user.id) && Objects.equals(getLogin(), user.getLogin()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getName(), user.getName()) && Objects.equals(getLastname(), user.getLastname()) && getRole_id() == user.getRole_id();
+        return isBlocked == user.isBlocked && Objects.equals(id, user.id) && Objects.equals(getLogin(), user.getLogin()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getName(), user.getName()) && Objects.equals(getLastname(), user.getLastname()) && getRole_id() == user.getRole_id() && Objects.equals(getClass_id(), user.getClass_id());
     }
 
     @Override
